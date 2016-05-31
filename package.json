@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/akscanb/smrtprpty/issues"
   },
-  "homepage": "https://github.com/akscanb/smrtprpty#readme"
+  "homepage": "https://github.com/akscanb/smrtprpty#readme",
+  "dependencies": {
+    "colu": "^0.10.17"
+  }
 }
