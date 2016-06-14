@@ -1,0 +1,11 @@
+development:
+  SimpleStorage:
+    args:
+      - 100
+  test:
+    args:
+      
+staging:
+  SimpleStorage:
+    args:
+      - 100
