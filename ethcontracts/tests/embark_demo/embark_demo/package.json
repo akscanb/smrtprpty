@@ -24,8 +24,5 @@
     "express": "^4.12.3",
     "read-yaml": "^1.0.0",
     "compression": "^1.4.3"
-  },
-  "dependencies": {
-    "ethersim": "^0.5.0"
   }
 }
