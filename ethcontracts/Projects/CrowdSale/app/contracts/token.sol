@@ -19,9 +19,13 @@ contract MyToken is owned{
     string public symbol;
     uint8 public decimals;
     uint256 public totalSupply;
+    /* Simple array of tokenholders */
+    address[] tokenHolders;
 
     /* This creates an array with all balances */
     mapping (address => uint256) public balanceOf;
+    /* Indexes for people's addresses*/
+    mapping (uint => address) public 
     mapping (address => mapping (address => uint256)) public allowance;
 
     /* This generates a public event on the blockchain that will notify clients */
@@ -32,7 +36,7 @@ contract MyToken is owned{
         uint256 initialSupply,
         string tokenName,
         uint8 decimalUnits,
-        string tokenSymbol
+        string tokenSymbol,
         ) {
         balanceOf[msg.sender] = initialSupply;              // Give the creator all initial tokens
         totalSupply = initialSupply;                        // Update total supply
@@ -40,6 +44,7 @@ contract MyToken is owned{
         symbol = tokenSymbol;                               // Set the symbol for display purposes
         decimals = decimalUnits;                            // Amount of decimals for display purposes
         msg.sender.send(msg.value);                         // Send back any ether sent accidentally
+        tokenHolders[0] = msg.sender;   // Adds the address in to the array of tokenholder addresses
     }
 
     /* Send coins */
@@ -48,7 +53,25 @@ contract MyToken is owned{
         if (balanceOf[_to] + _value < balanceOf[_to]) throw; // Check for overflows
         balanceOf[msg.sender] -= _value;                     // Subtract from the sender
         balanceOf[_to] += _value;                            // Add the same to the recipient
+        tokenHolders.push(_to);                              // Adds the address of coin holder in the array
+        checkTokenHolders();                                 // Looks at tokenHolders and deletes addresses with no tokens.
         Transfer(msg.sender, _to, _value);                   // Notify anyone listening that this transfer took place
+    }
+
+    /* Fix tokenholder array */
+    function checkTokenHolders() returns(bool success){
+      address[] newTokenHolders
+      for(var i = 0; i < tokenHolders.length; i++){
+        if(balanceOf[tokenHolders[i]] > 0){
+          newTokenHolders.push(tokenHolders[i])
+        }
+      }
+      delete tokenHolders;
+      for(var i = 0; i < newTokenHolders.length; i++){
+        tokenHolders.push(newTokenHolders[i]);
+      }
+      delete newTokenHolders;
+      return true;
     }
 
     /* Allow another contract to spend some tokens in your behalf */
@@ -68,12 +91,22 @@ contract MyToken is owned{
         balanceOf[_from] -= _value;                          // Subtract from the sender
         balanceOf[_to] += _value;                            // Add the same to the recipient
         allowance[_from][msg.sender] -= _value;
+        tokenHolders.push(_to);                             // Adds the address coin is being sent to in to the array
+        checkTokenHolders()                                 // Makes sure there aren't empty addresses in the array
         Transfer(_from, _to, _value);
         return true;
     }
 
+    /* Transfer funds based on number of coins. This will later be moved in to the unnamed function */
+    function transferFunds() returns(bool success){
+        for(i = 0; i < tokenHolders.length; i++){
+          balanceOf[tokenHolders[i]]
+        }
+    }
+
+
     /* This unnamed function is called whenever someone tries to send ether to it */
     function () {
-        throw;     // Prevents accidental sending of ether
+
     }
 }
