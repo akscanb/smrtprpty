@@ -107,7 +107,9 @@ contract MyToken is owned{
     /* Transfer funds based on number of coins. This will later be moved in to the unnamed function */
     function transferFunds() returns(bool success){
         if(etherBalanceOf(msg.sender)>0){
-          msg.sender.send(etherBalanceOf(msg.sender));
+          uint value = etherBalanceOf[msg.sender]
+          etherBalanceOf[msg.sender] = 0
+          msg.sender.send(value);
           return true;
         }
         return false;
