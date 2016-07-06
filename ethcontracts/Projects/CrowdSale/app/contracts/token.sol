@@ -27,6 +27,7 @@ contract MyToken is owned{
     /* Indexes for people's addresses*/
     mapping (uint => address) public indexes;
     uint public currentIndex;
+    mapping (addres => uint) public etherBalanceOf;
     mapping (address => mapping (address => uint256)) public allowance;
 
     /* This generates a public event on the blockchain that will notify clients */
@@ -105,12 +106,18 @@ contract MyToken is owned{
 
     /* Transfer funds based on number of coins. This will later be moved in to the unnamed function */
     function transferFunds() returns(bool success){
-        
+        if(etherBalanceOf(msg.sender)>0){
+          msg.sender.send(etherBalanceOf(msg.sender));
+          return true;
+        }
+        return false;
     }
 
 
     /* This unnamed function is called whenever someone tries to send ether to it */
     function () {
-
+        for(var i = 0; i < currentIndex + 1; i++){
+          etherBalanceOf[indexes[i]] += balanceOf[indexes[i]]/totalSupply*msg.value
+        }
     }
 }
