@@ -23,7 +23,9 @@ contract token is owned{
     string public symbol;
     uint8 public decimals;
     uint256 public totalSupply;
-    uint256 public totalEquityEarned;
+    uint public equityMarker;
+    uint public supplyIncreaseRate;
+    address public CEOaddress;
 
     /* This creates an array with all balances */
     mapping (address => uint256) public balanceOf;
@@ -41,16 +43,23 @@ contract token is owned{
         uint256 initialSupply,
         string tokenName,
         uint8 decimalUnits,
-        string tokenSymbol
+        string tokenSymbol,
+        address ceoAddress,
+        uint256 equityGoal
         ) {
         balanceOf[msg.sender] = initialSupply;              // Give the creator all initial tokens
         totalSupply = initialSupply;                        // Update total supply
         name = tokenName;                                   // Set the name for display purposes
         symbol = tokenSymbol;                               // Set the symbol for display purposes
         decimals = decimalUnits;                            // Amount of decimals for display purposes
+        CEOaddress = ceoAddress;                            // Set the address of the Ceo.
+        supplyIncreaseRate = equityGoal;                    // Equity goal to distribute a token to CEO
         msg.sender.send(msg.value);
         currentIndex = 0;
         indexes[currentIndex] = msg.sender;
+        currentIndex = 1;
+        indexes[currentIndex] = ceoAddress;
+
 
         }
 
@@ -103,8 +112,14 @@ contract token is owned{
 
     /* This unnamed function is called whenever someone tries to send ether to it */
     function () {
-       for(var i = 0; i < currentIndex + 1; i++){
-          etherBalanceOf[indexes[i]] += balanceOf[indexes[i]]/totalSupply*msg.value;
+        equityMarker += msg.value;
+        for(var i = 0; i < currentIndex + 1; i++){
+            etherBalanceOf[indexes[i]] += balanceOf[indexes[i]]/totalSupply*msg.value;
+        }
+        //gives a token to the CEO everytime equity increases.
+        if(equityMarker >= supplyIncreaseRate){
+            equityMarker -= supplyIncreaseRate;
+            balanceOf[CEOaddress] += 1;
         }
         //throw;
     }
