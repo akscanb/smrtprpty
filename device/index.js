@@ -53,15 +53,13 @@ contractAddress = '0xbaF3FD6D81Fbe3D1eDd140f528D7C1A7976fae31';
 
 web3.eth.defaultAccount = '0x2fb02443e29b2fdddfd326d1ab9c7b824ebc1913'
 
-console.log(web3.eth.defaultAccount);
-
 var MyContract = web3.eth.contract(abiArray);
 // instantiate by address
 var myContractInstance = MyContract.at(contractAddress);
 
-var result = myContractInstance.withDraw()
+//var result = myContractInstance.withDraw()
 
-var result = web3.eth.estimateGas(myContractInstance.withDraw());
+var result = myContractInstance.withDraw.estimateGas();
 
 console.log(result);
 
