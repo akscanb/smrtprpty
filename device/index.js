@@ -20,7 +20,7 @@ onenameClient = new OnenameClient(process.env.ONENAME_APP_ID, process.env.ONENAM
 /******************/
 
 var Twitter = require('twitter');
- 
+
 var client = new Twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -46,12 +46,12 @@ abiArray = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","ty
 contractAddress = '0xbaF3FD6D81Fbe3D1eDd140f528D7C1A7976fae31';
 
 
-// This function should resolve a twitter account based on 
+// This function should resolve a twitter account based on
 // function getTwitterHandleForAddress(address, cb) {
 // 	onenameClient.searchUsers('Ethereum:'+address, cb(err, data)
 // }
 
-web3.eth.defaultAccount = '0x2fb02443e29b2fdddfd326d1ab9c7b824ebc1913'
+web3.eth.defaultAccount = '0xC27F3b8E5b15fC2579B87206aD827F3cFc008Cbd';
 
 console.log(web3.eth.defaultAccount);
 
@@ -90,7 +90,7 @@ console.log(result);
 // stream.on('data', function(tweet) {
 //   console.log(tweet.text);
 // });
- 
+
 // stream.on('error', function(error) {
 //   throw error;
 // });
