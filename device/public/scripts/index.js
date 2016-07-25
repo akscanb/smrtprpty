@@ -1,4 +1,4 @@
-ot/*/
+/*/
 /* This script should look for a payment event in the smrtprprty contract
 /* and either try to look up a related twitter account and stream tweets
 /* or alternatively accepts signed messages of websites or twitter handles.
