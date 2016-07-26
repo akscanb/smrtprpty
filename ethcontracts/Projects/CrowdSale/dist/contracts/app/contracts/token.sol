@@ -26,7 +26,6 @@ contract token is owned{
     uint public equityMarker;
     uint public supplyIncreaseRate;
     address public CEOaddress;
-    uint256 public timePayUnlocks;
 
     /* This creates an array with all balances */
     mapping (address => uint256) public balanceOf;
@@ -38,7 +37,7 @@ contract token is owned{
 
     /* This generates a public event on the blockchain that will notify clients */
     event Transfer(address indexed from, address indexed to, uint256 value);
-    event LockedBy(address currentHolder, uint256 lockedTill);
+
     /* Initializes contract with initial supply tokens to the creator of the contract */
     function token(
         uint256 initialSupply,
@@ -60,7 +59,6 @@ contract token is owned{
         indexes[currentIndex] = msg.sender;
         currentIndex = 1;
         indexes[currentIndex] = ceoAddress;
-        timePayUnlocks = now;
 
 
         }
@@ -111,24 +109,16 @@ contract token is owned{
           msg.sender.send(value);
         }
     }
-    function pay(){
-        if (now >= timePayUnlocks){
-          equityMarker += msg.value;
-          for(var i = 0; i < currentIndex + 1; i++){
-            etherBalanceOf[indexes[i]] += balanceOf[indexes[i]]/totalSupply*msg.value;
-          }
-          //gives a token to the CEO everytime equity increases.
-          balanceOf[CEOaddress] += equityMarker/supplyIncreaseRate;
-          equityMarker = 0;
-          timePayUnlocks = now + msg.value * minutes;
-          LockedBy(msg.sender, timePayUnlocks);
-        }
-        else{
-          throw;
-        }
-    }
+
     /* This unnamed function is called whenever someone tries to send ether to it */
     function () {
-        throw;
+        equityMarker += msg.value;
+        for(var i = 0; i < currentIndex + 1; i++){
+            etherBalanceOf[indexes[i]] += balanceOf[indexes[i]]/totalSupply*msg.value;
+        }
+        //gives a token to the CEO everytime equity increases.
+        balanceOf[CEOaddress] += equityMarker/supplyIncreaseRate;
+        equityMarker = 0;
+        //throw;
     }
 }

@@ -1,6 +1,7 @@
 
 $(document).ready(function() {
-  Crowdsale.fundingGoal(function(err, result){
-    console.log(result)
-  })
+
+  console.log(token1.pay.estimateGas());
+  console.log(token.withDraw.estimateGas());
+
 })

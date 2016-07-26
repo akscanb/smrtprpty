@@ -16,7 +16,7 @@ contract owned {
 }
 contract tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData); }
 
-contract token is owned{
+contract token1 is owned{
     /* Public variables of the token */
     string public standard = 'Token 0.1';
     string public name;
@@ -26,7 +26,6 @@ contract token is owned{
     uint public equityMarker;
     uint public supplyIncreaseRate;
     address public CEOaddress;
-    uint256 public timePayUnlocks;
 
     /* This creates an array with all balances */
     mapping (address => uint256) public balanceOf;
@@ -38,9 +37,9 @@ contract token is owned{
 
     /* This generates a public event on the blockchain that will notify clients */
     event Transfer(address indexed from, address indexed to, uint256 value);
-    event LockedBy(address currentHolder, uint256 lockedTill);
+
     /* Initializes contract with initial supply tokens to the creator of the contract */
-    function token(
+    function token1(
         uint256 initialSupply,
         string tokenName,
         uint8 decimalUnits,
@@ -60,7 +59,6 @@ contract token is owned{
         indexes[currentIndex] = msg.sender;
         currentIndex = 1;
         indexes[currentIndex] = ceoAddress;
-        timePayUnlocks = now;
 
 
         }
@@ -104,28 +102,22 @@ contract token is owned{
     }
 
     /*withdraw funds*/
-   function withDraw(){
-        if(etherBalanceOf[msg.sender]>0){
-          uint value = etherBalanceOf[msg.sender];
-          etherBalanceOf[msg.sender] = 0;
-          msg.sender.send(value);
-        }
-    }
+//   function withDraw(){
+//         if(etherBalanceOf[msg.sender]>0){
+//           uint value = etherBalanceOf[msg.sender];
+//           etherBalanceOf[msg.sender] = 0;
+//           msg.sender.send(value);
+//         }
+//     }
+
     function pay(){
-        if (now >= timePayUnlocks){
-          equityMarker += msg.value;
-          for(var i = 0; i < currentIndex + 1; i++){
-            etherBalanceOf[indexes[i]] += balanceOf[indexes[i]]/totalSupply*msg.value;
-          }
-          //gives a token to the CEO everytime equity increases.
-          balanceOf[CEOaddress] += equityMarker/supplyIncreaseRate;
-          equityMarker = 0;
-          timePayUnlocks = now + msg.value * minutes;
-          LockedBy(msg.sender, timePayUnlocks);
+        equityMarker += msg.value;
+        for(var i = 0; i < currentIndex + 1; i++){
+            indexes[i].send(balanceOf[indexes[i]]/totalSupply*msg.value);
         }
-        else{
-          throw;
-        }
+        //gives a token to the CEO everytime equity increases.
+        balanceOf[CEOaddress] += equityMarker/supplyIncreaseRate;
+        equityMarker = 0;
     }
     /* This unnamed function is called whenever someone tries to send ether to it */
     function () {

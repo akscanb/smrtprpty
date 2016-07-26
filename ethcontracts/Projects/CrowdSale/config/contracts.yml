@@ -1,11 +1,10 @@
 development:
-  dumb:
+  token:
     args:
-      -10000
-  Crowdsale:
-    args:
-      -10
-      -30
-      -.1
-
+      - 100
+      - smt
+      - 1
+      - smt
+      - 0x313665629ad006e5ae36696e44f61312765070cd
+      - 1
 staging:
