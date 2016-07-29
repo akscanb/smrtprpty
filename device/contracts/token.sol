@@ -55,11 +55,13 @@ contract token is owned{
         decimals = decimalUnits;                            // Amount of decimals for display purposes
         CEOaddress = ceoAddress;                            // Set the address of the Ceo.
         supplyIncreaseRate = equityGoal;                    // Equity goal to distribute a token to CEO
-        msg.sender.send(msg.value);
+        msg.sender.send(msg.value);                         // Sends back any money sent on creation
         currentIndex = 0;
         indexes[currentIndex] = msg.sender;
-        currentIndex = 1;
-        indexes[currentIndex] = ceoAddress;
+        if(ceoAddress != msg.sender){
+          currentIndex = 1;
+          indexes[currentIndex] = ceoAddress;
+        }
         timePayUnlocks = now;
 
 
@@ -71,6 +73,7 @@ contract token is owned{
         if (balanceOf[_to] + _value < balanceOf[_to]) throw; // Check for overflows
         balanceOf[msg.sender] -= _value;                     // Subtract from the sender
         balanceOf[_to] += _value;                            // Add the same to the recipient
+        //Don't want indexes to map to addresses that already exist.
         if(balanceOf[_to] == 0){
             currentIndex ++;
             indexes[currentIndex] = _to;
@@ -95,6 +98,7 @@ contract token is owned{
         balanceOf[_from] -= _value;                          // Subtract from the sender
         balanceOf[_to] += _value;                            // Add the same to the recipient
         allowance[_from][msg.sender] -= _value;
+        //Don't want indexes to map to addresses that already exist.
         if(balanceOf[_to] == 0){
             currentIndex ++;
             indexes[currentIndex] = _to;
@@ -119,6 +123,8 @@ contract token is owned{
           }
           //gives a token to the CEO everytime equity increases.
           balanceOf[CEOaddress] += equityMarker/supplyIncreaseRate;
+          //makes sure that the totalSupply also increases at the same rate.
+          totalSupply += equityMarker/supplyIncreaseRate;
           equityMarker = 0;
           timePayUnlocks = now + msg.value * 1 minutes;
           LockedBy(msg.sender, timePayUnlocks);

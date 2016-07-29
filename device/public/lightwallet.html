@@ -1,0 +1,35 @@
+<html>
+  <body>
+    <script src="../dist/lightwallet.min.js"></script>
+    <script type="text/javascript" src="../node_modules/web3/dist/web3.js"></script>
+    <script type="text/javascript" src="../node_modules/hooked-web3-provider/build/hooked-web3-provider.js"></script>
+    <script type="text/javascript" src="../node_modules/async/lib/async.js"></script>
+
+    <script src="../scripts/lightwallet.js"></script>
+    <h1>LightWallet</h1>
+    <h2>New Wallet</h2>
+    <div><input type="text" id="userEntropy" placeholder="Type random text to generate entropy" size="80"></input><button onclick="newWallet()">Create New Wallet</button></div>
+    <h2>Restore Wallet</h2>
+    <div><input type="text" id="seed" value="" size="80"></input><button onclick="setSeed()">Restore wallet from Seed</button></div>
+    <h2>Show Addresses</h2>
+    <div>Show <input type="text" id="numAddr" size="5" value="1"></input> more address(es) <button onclick="newAddresses('')">Show</button></div>
+    <div id="addr"></div>
+    <div><button onClick='getBalances()'>Refresh</button></div>
+    <h2>Send Ether</h2>
+    <div>From: <select id="sendFrom"></select></div>
+    <div>To: <input type="text" size="40" id="sendTo"></input></div>
+    <div>Ether: <input type="text" id="sendValueAmount"></div>
+    <div><button onclick="sendEth()">Send Ether</button></div>
+    <h2>Show Seed</h2>
+    <button onclick="showSeed()">Show Seed</button>
+    <h2>Function Call</h2>
+    <div>Caller: <select id="functionCaller"></select></div>
+    <div>Contract Address: <input type="text" size="40" id="contractAddr"></input></div>
+    <div>Contract ABI: <input type="text" size="40" id="contractAbi"></input></div>
+    <div>Function Name: <input type="text" size="20" id="functionName"></input></div>
+    <div>Function Arguments: <input type="text" size="40" id="functionArgs"></input></div>
+    <div>Value (Ether): <input type="text" id="sendValueAmount"></div>
+    <div><button onclick="functionCall()">Call Function</button></div>
+
+  </body>
+</html>
