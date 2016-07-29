@@ -1,8 +1,12 @@
 var web3 = new Web3();
 var global_keystore;
+var signing = lightwallet.signing
+var socket = io.connect('http://localhost:3000')
+
+
 function setWeb3Provider(keystore) {
   var web3Provider = new HookedWeb3Provider({
-    host: "http://dci-node-1.media.mit.edu:8545",
+    host: "http://localhost:8545",
     transaction_signer: keystore
   });
   web3.setProvider(web3Provider);
@@ -74,8 +78,8 @@ function newWallet() {
 function showSeed() {
   var password = prompt('Enter password to show your seed. Do not let anyone else see your seed.', 'Password');
   lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
-  var seed = global_keystore.getSeed(pwDerivedKey);
-  alert('Your seed is: "' + seed + '". Please write it down.')
+    var seed = global_keystore.getSeed(pwDerivedKey);
+    alert('Your seed is: "' + seed + '". Please write it down.')
   })
 }
 function sendEth() {
@@ -108,4 +112,24 @@ function functionCall() {
   }
   args.push(callback)
   contract[functionName].apply(this, args)
+}
+function signMessage(){
+  var password = prompt('Enter Password', 'Password');
+  var message = document.getElementById('url').value;
+  lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
+    var seed = global_keystore.getSeed(pwDerivedKey);
+    var ks = new lightwallet.keystore(seed, pwDerivedKey);
+    ks.generateNewAddress(pwDerivedKey);
+    var addr = ks.getAddresses()[0];
+    var signedMsg = signing.signMsg(ks, pwDerivedKey, message, addr);
+    console.log(signedMsg.v.toString());
+    console.log(signedMsg.r.toString());
+    console.log(signedMsg.s.toString());
+    socket.emit('signedMessage',{
+      v:signedMsg.v,
+      r:signedMsg.r,
+      s:signedMsg.s,
+      msg: message
+    });
+  });
 }

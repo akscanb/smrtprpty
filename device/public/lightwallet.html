@@ -4,7 +4,7 @@
     <script type="text/javascript" src="../node_modules/web3/dist/web3.js"></script>
     <script type="text/javascript" src="../node_modules/hooked-web3-provider/build/hooked-web3-provider.js"></script>
     <script type="text/javascript" src="../node_modules/async/lib/async.js"></script>
-
+    <script src="/socket.io/socket.io.js"></script>
     <script src="../scripts/lightwallet.js"></script>
     <h1>LightWallet</h1>
     <h2>New Wallet</h2>
@@ -30,6 +30,8 @@
     <div>Function Arguments: <input type="text" size="40" id="functionArgs"></input></div>
     <div>Value (Ether): <input type="text" id="sendValueAmount"></div>
     <div><button onclick="functionCall()">Call Function</button></div>
-
+    <h2>Sign Message</h2>
+    <div>Url: <input type="text" id="url" value="" size="80"></input></div>
+    <div><button onclick="signMessage()">Sign Message</button></div>
   </body>
 </html>
