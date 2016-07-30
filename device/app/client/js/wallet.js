@@ -1,5 +1,12 @@
+var HookedWeb3Provider = require("hooked-web3-provider");
+var Web3 = require('web3');
+var io = require('socket.io-client');
+var async = require('async');
+
+require('../sass/wallet.scss');
+
 var web3 = new Web3();
-var global_keystore;
+var global_keystore = '';
 
 var signing = lightwallet.signing
 var socket = io.connect('http://localhost:3000')
@@ -7,86 +14,88 @@ var socket = io.connect('http://localhost:3000')
 
 function setWeb3Provider(keystore) {
   var web3Provider = new HookedWeb3Provider({
-    host: "http://localhost:8545",
+    host: "http://dci-node-1.media.mit.edu:8545",
     transaction_signer: keystore
   });
   web3.setProvider(web3Provider);
 }
-function newAddresses(password) {
+
+window.newAddresses = (password) => {
 
   if (password == '') {
     password = prompt('Enter password to retrieve addresses', 'Password');
   }
-  var numAddr = parseInt(document.getElementById('numAddr').value)
+  var numAddr = parseInt($('#numAddr').val())
   lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
-  global_keystore.generateNewAddress(pwDerivedKey, numAddr);
-  var addresses = global_keystore.getAddresses();
-  document.getElementById('sendFrom').innerHTML = ''
-  document.getElementById('functionCaller').innerHTML = ''
-  for (var i=0; i<addresses.length; ++i) {
-    document.getElementById('sendFrom').innerHTML += '<option value="' + addresses[i] + '">' + addresses[i] + '</option>'
-    document.getElementById('functionCaller').innerHTML += '<option value="' + addresses[i] + '">' + addresses[i] + '</option>'
-  }
-  getBalances();
-})
+    global_keystore.generateNewAddress(pwDerivedKey, numAddr);
+    var addresses = global_keystore.getAddresses();
+    $('#sendFrom').html('')
+    $('#functionCaller').html('')
+    for (var i=0; i<addresses.length; ++i) {
+      $('#sendFrom').append('<option value="' + addresses[i] + '">' + addresses[i] + '</option>')
+      $('#functionCaller').append('<option value="' + addresses[i] + '">' + addresses[i] + '</option>')
+    }
+    getBalances();
+  })
 }
-function getBalances() {
+
+window.getBalances = () => {
 
   var addresses = global_keystore.getAddresses();
-  document.getElementById('addr').innerHTML = 'Retrieving addresses...'
+  $('#addr').html('Retrieving addresses...');
   async.map(addresses, web3.eth.getBalance, function(err, balances) {
     async.map(addresses, web3.eth.getTransactionCount, function(err, nonces) {
-      document.getElementById('addr').innerHTML = ''
+      $('#addr').html('');
       for (var i=0; i<addresses.length; ++i) {
-        document.getElementById('addr').innerHTML += '<div>' + addresses[i] + ' (Bal: ' + (balances[i] / 1.0e18) + ' ETH, Nonce: ' + nonces[i] + ')' + '</div>'
+        $('#addr').append('<div>' + addresses[i] + ' (Bal: ' + (balances[i] / 1.0e18) + ' ETH, Nonce: ' + nonces[i] + ')' + '</div>')
       }
     })
   })
 }
-function setSeed() {
+
+window.setSeed = () => {
   var password = prompt('Enter Password to encrypt your seed', 'Password');
 
   lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
-  global_keystore = new lightwallet.keystore(
-    document.getElementById('seed').value,
-    pwDerivedKey);
-  document.getElementById('seed').value = ''
+    global_keystore = new lightwallet.keystore($('#seed').val(), pwDerivedKey);
+    $('#seed').val('');
 
-  newAddresses(password);
-  setWeb3Provider(global_keystore);
+    newAddresses(password);
+    setWeb3Provider(global_keystore);
 
-  getBalances();
+    getBalances();
   })
 }
-function newWallet() {
-  var extraEntropy = document.getElementById('userEntropy').value;
-  document.getElementById('userEntropy').value = '';
+
+window.newWallet = () => {
+  var extraEntropy = $('#userEntropy').val();
+  $('#userEntropy').val('');
   var randomSeed = lightwallet.keystore.generateRandomSeed(extraEntropy);
   var infoString = 'Your new wallet seed is: "' + randomSeed +
-    '". Please write it down on paper or in a password manager, you will need it to access your wallet. Do not let anyone see this seed or they can take your Ether. ' +
-    'Please enter a password to encrypt your seed while in the browser.'
+  '". Please write it down on paper or in a password manager, you will need it to access your wallet. Do not let anyone see this seed or they can take your Ether. ' +
+  'Please enter a password to encrypt your seed while in the browser.'
   var password = prompt(infoString, 'Password');
   lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
-  global_keystore = new lightwallet.keystore(
-    randomSeed,
-    pwDerivedKey);
+    global_keystore = new lightwallet.keystore(randomSeed, pwDerivedKey);
 
-  newAddresses(password);
-  setWeb3Provider(global_keystore);
-  getBalances();
+    newAddresses(password);
+    setWeb3Provider(global_keystore);
+    getBalances();
   })
 }
-function showSeed() {
+
+window.showSeed = function() {
   var password = prompt('Enter password to show your seed. Do not let anyone else see your seed.', 'Password');
   lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
     var seed = global_keystore.getSeed(pwDerivedKey);
     alert('Your seed is: "' + seed + '". Please write it down.')
   })
 }
-function sendEth() {
-  var fromAddr = document.getElementById('sendFrom').value
-  var toAddr = document.getElementById('sendTo').value
-  var valueEth = document.getElementById('sendValueAmount').value
+
+window.sendEth = () => {
+  var fromAddr = $('#sendFrom').val()
+  var toAddr = $('#sendTo').val()
+  var valueEth = $('#sendValueAmount').val()
   var value = parseFloat(valueEth)*1.0e18
   var gasPrice = 50000000000
   var gas = 50000
@@ -95,14 +104,15 @@ function sendEth() {
     console.log('txhash: ' + txhash)
   })
 }
-function functionCall() {
-  var fromAddr = document.getElementById('functionCaller').value
-  var contractAddr = document.getElementById('contractAddr').value
-  var abi = JSON.parse(document.getElementById('contractAbi').value)
+
+window.functionCall = () => {
+  var fromAddr = $('#functionCaller').val()
+  var contractAddr = $('#contractAddr').val()
+  var abi = JSON.parse($('#contractAbi').val())
   var contract = web3.eth.contract(abi).at(contractAddr)
-  var functionName = document.getElementById('functionName').value
-  var args = JSON.parse('[' + document.getElementById('functionArgs').value + ']')
-  var valueEth = document.getElementById('sendValueAmount').value
+  var functionName = $('#functionName').val()
+  var args = JSON.parse('[' + $('#functionArgs').val() + ']')
+  var valueEth = $('#sendValueAmount').val()
   var value = parseFloat(valueEth)*1.0e18
   var gasPrice = 50000000000
   var gas = 3141592
@@ -114,9 +124,10 @@ function functionCall() {
   args.push(callback)
   contract[functionName].apply(this, args)
 }
-function signMessage(){
+
+window.signMessage = () => {
   var password = prompt('Enter Password', 'Password');
-  var message = document.getElementById('url').value;
+  var message = $('#url').val();
   lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
     var seed = global_keystore.getSeed(pwDerivedKey);
     var ks = new lightwallet.keystore(seed, pwDerivedKey);
