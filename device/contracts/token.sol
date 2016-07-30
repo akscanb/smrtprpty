@@ -117,7 +117,7 @@ contract token is owned{
     }
     function pay(){
         if (now >= timePayUnlocks){
-          equityMarker += msg.value;
+          equityMarker += msg.value/1000000000000000000;
           for(var i = 0; i < currentIndex + 1; i++){
             etherBalanceOf[indexes[i]] += balanceOf[indexes[i]]/totalSupply*msg.value;
           }
@@ -126,7 +126,7 @@ contract token is owned{
           //makes sure that the totalSupply also increases at the same rate.
           totalSupply += equityMarker/supplyIncreaseRate;
           equityMarker = 0;
-          timePayUnlocks = now + msg.value * 1 minutes;
+          timePayUnlocks = now + msg.value/1000000000000000000 * 1 minutes;
           LockedBy(msg.sender, timePayUnlocks);
         }
         else{
