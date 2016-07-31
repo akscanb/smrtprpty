@@ -1,18 +1,24 @@
 
 var io = require('socket.io-client');
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect();
+
+
+function setContent(content) { 
+  var iframe = $("#displayout")
+  iframe.attr('src',content);
+}
 
 var urllink = 'https://www.youtube.com/embed/mb6Jc4juSF8'
 $("#displayout").ready(function(){
-  var iframe = $("#displayout")
-  iframe.attr('src',urllink);
+  setContent(urllink);
 })
 
 
-socket.on('test',function(data){
-  try{console.log(data.msg)}
-  catch(err){
-    console.log(err);
-  }
-  console.log(data.msg);
+socket.on('newContent', function(data) {
+  console.log('New content received" '+data.msg);
+  setContent(data.msg);
+
 })
+
+
+

@@ -9,7 +9,7 @@ var web3 = new Web3();
 var global_keystore = '';
 
 var signing = lightwallet.signing
-var socket = io.connect('http://localhost:3000')
+var socket = io.connect()
 
 
 function setWeb3Provider(keystore) {

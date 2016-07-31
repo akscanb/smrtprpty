@@ -57,7 +57,7 @@
 	var global_keystore = '';
 
 	var signing = lightwallet.signing;
-	var socket = io.connect('http://localhost:3000');
+	var socket = io.connect();
 
 	function setWeb3Provider(keystore) {
 	  var web3Provider = new HookedWeb3Provider({

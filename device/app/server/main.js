@@ -5,11 +5,11 @@ exports = module.exports = function (server) {
   var ws = io(server);
   ws.on('connection',function(socket){
     socket.on('signedMessage',function(data){
-      //console.log(data);
-      //console.log(data.v);
       var recoveredAddress = lightwallet.signing.recoverAddress(data.msg, data.v,data.r,data.s);
-      console.log(recoveredAddress.toString('hex'));
-      socket.emit('test',{
+      console.log('Received message '+data.msg+' signed by '+recoveredAddress.toString('hex'));
+      // To do: Check if address is allowed to operate service
+      // To do: Check message
+      ws.emit('newContent',{
         msg : data.msg
       })
     })
