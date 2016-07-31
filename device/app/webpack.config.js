@@ -3,6 +3,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
   entry: {
     wallet:  './client/js/wallet.js',
+    display: './client/js/display.js'
   },
   output: {
     path:     './public/',

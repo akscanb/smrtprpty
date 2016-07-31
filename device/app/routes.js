@@ -5,8 +5,12 @@ exports = module.exports = function (app) {
     next();
   });
 
-  //HomePage
+  //lightwallet
   app.get('/lightwallet', function (req, res, next) {
     res.render('index.html');
+  });
+  //display
+  app.get('/display', function(req, res, next){
+    res.render('display.html');
   });
 };
