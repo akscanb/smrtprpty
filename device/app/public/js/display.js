@@ -48,12 +48,16 @@
 
 	var io = __webpack_require__(1);
 	var socket = io.connect('http://localhost:3000');
+
 	var urllink = 'https://www.youtube.com/embed/mb6Jc4juSF8';
-	var iframe = $("#displayout");
-	iframe.attr('src', urllink);
-	socket.on('signedMessage', function (data) {
+	$("#displayout").ready(function () {
+	  var iframe = $("#displayout");
+	  iframe.attr('src', urllink);
+	});
+
+	socket.on('test', function (data) {
 	  try {
-	    iframe.attr('src', data.msg);
+	    console.log(data.msg);
 	  } catch (err) {
 	    console.log(err);
 	  }
