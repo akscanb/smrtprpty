@@ -163,8 +163,11 @@
 	  var contract = web3.eth.contract(abi).at(contractAddr);
 	  var functionName = $('#functionName').val();
 	  var args = JSON.parse('[' + $('#functionArgs').val() + ']');
-	  var valueEth = $('#sendValueAmount').val();
-	  var value = parseFloat(valueEth) * 1.0e18;
+	  var valueEth = $('#sendValueAmountFunction').val();
+	  var value = parseFloat(valueEth) * 1000000000000000000;
+	  console.log(value);
+	  console.log('in between');
+	  console.log(valueEth);
 	  var gasPrice = 50000000000;
 	  var gas = 3141592;
 	  args.push({ from: fromAddr, value: value, gasPrice: gasPrice, gas: gas });
