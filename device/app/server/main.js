@@ -21,12 +21,16 @@ exports = module.exports = function (server) {
   // instantiate by address
   var myContractInstance = MyContract.at(contractAddress);
   var event = myContractInstance.LockedBy();
-  event.watch(function(error,result){
-    if(!error)
-      console.log(result);
-      currentHolder = ""
-      currentHolder += result.args.currentHolder;
-      console.log(result.args.currentHolder);
+  event.watch(function(error,result) {
+    if(!error) {
+      
+      if (result.hasOwnProperty('args') && result.args.hasOwnProperty('currentHolder')) {
+        currentHolder = result.args.currentHolder+'';
+        console.log('New holder: '+result.args.currentHolder);
+      }
+    } else {
+      console.log('Event error: '+error);
+    }  
   })
 
 
