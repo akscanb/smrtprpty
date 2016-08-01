@@ -6,6 +6,7 @@ exports = module.exports = function (server) {
   var ws = io(server);
   var Web3 = require('web3');
   var currentHolder = "";
+  var currentContent = "https://www.youtube.com/embed/mb6Jc4juSF8";
   if (typeof web3 !== 'undefined') {
     web3 = new Web3(web3.currentProvider);
   } else {
@@ -30,6 +31,11 @@ exports = module.exports = function (server) {
 
 
   ws.on('connection',function(socket){
+
+    ws.emit('newContent',{
+          msg : currentContent
+    })
+
     socket.on('signedMessage',function(data){
       var recoveredAddress = lightwallet.signing.recoverAddress(data.msg, data.v,data.r,data.s);
       console.log('Received message '+data.msg+' signed by '+recoveredAddress.toString('hex'));
@@ -39,6 +45,7 @@ exports = module.exports = function (server) {
       console.log(msgSender);
       console.log(currentHolder==msgSender);
       if(currentHolder==msgSender){
+        currentContent = data.msg;
         ws.emit('newContent',{
           msg : data.msg
         })
