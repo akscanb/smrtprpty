@@ -4,4 +4,4 @@ This is the place for code that will run on the embedded device / smart property
 
 To run type "node app" after running npm install
 
-geth --testnet --rpcapi "eth,net,web3" --rpc --rpcport "8545" --rpcaddr "dci-node-1.media.mit.edu" --fast --rpccorsdomain "http://localhost:3000"
+geth --testnet --rpcapi "eth,net,web3" --rpc --rpcport "8545" --rpcaddr "dci-node-1.media.mit.edu" --fast --rpccorsdomain "*"
