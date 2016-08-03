@@ -4,6 +4,9 @@ exports = module.exports = function (app) {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
   });
+  app.get('/test',function(req, res, next){
+    res.render('test.html');
+  })
 
   //lightwallet
   app.get('/lightwallet', function (req, res, next) {

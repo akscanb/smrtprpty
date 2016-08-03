@@ -25,7 +25,7 @@ exports = module.exports = function (server) {
     if(!error)
       console.log(result);
       currentHolder = ""
-      currentHolder += result.args.currentHolder;
+      //currentHolder += result.args.currentHolder;
       console.log(result.args.currentHolder);
   })
 

@@ -2,6 +2,9 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 
+var React = require('react');
+
+
 var app = express();
 
 app.set('port', process.env.PORT || 3000);
