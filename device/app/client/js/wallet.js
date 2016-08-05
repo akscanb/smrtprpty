@@ -115,7 +115,7 @@ window.getBalances = () => {
 
 window.setSeed = () => {
   //var password = prompt('Enter Password to encrypt your seed', 'Password');
-  console.log($('#seed').val());
+  //console.log($('#seed').val());
   var password = $('#password').val();
   lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
     global_keystore = new lightwallet.keystore($('#seed').val(), pwDerivedKey);
@@ -210,9 +210,9 @@ window.signMessage = () => {
     ks.generateNewAddress(pwDerivedKey);
     var addr = ks.getAddresses()[0];
     var signedMsg = signing.signMsg(ks, pwDerivedKey, message, addr);
-    console.log(signedMsg.v.toString());
-    console.log(signedMsg.r.toString());
-    console.log(signedMsg.s.toString());
+    // console.log(signedMsg.v.toString());
+    // console.log(signedMsg.r.toString());
+    // console.log(signedMsg.s.toString());
     socket.emit('signedMessage',{
       v:signedMsg.v,
       r:signedMsg.r,
