@@ -94,7 +94,7 @@
 	  $('#loading').show();
 	};
 	window.msgConsole = function () {
-	  console.log("We are here!");
+	  //console.log("We are here!")
 	  $('#loading').hide();
 	  $('#msging').show();
 	};
@@ -106,7 +106,7 @@
 	  var myContractInstance = MyContract.at(contractAddress);
 	  var event = myContractInstance.LockedBy();
 	  event.watch(function (error, result) {
-	    console.log('error in event watch:' + error);
+	    console.log(error);
 	    if (!error) {
 	      //console.log('hello');
 	      //console.log(result);
@@ -120,7 +120,7 @@
 	      }
 	    }
 	  });
-	  console.log('reached here!');
+	  //console.log('reached here!');
 	};
 
 	window.newAddresses = function (password) {
@@ -161,12 +161,12 @@
 
 	window.setSeed = function () {
 	  //var password = prompt('Enter Password to encrypt your seed', 'Password');
-	  console.log($('#seed').val());
+	  //console.log($('#seed').val());
 	  var password = $('#password').val();
 	  lightwallet.keystore.deriveKeyFromPassword(password, function (err, pwDerivedKey) {
 	    global_keystore = new lightwallet.keystore($('#seed').val(), pwDerivedKey);
 	    $('#seed').val('');
-	    console.log($('#seed').val());
+	    //console.log($('#seed').val());
 	    newAddresses(password);
 	    setWeb3Provider(global_keystore);
 	    getBalances();
@@ -178,7 +178,7 @@
 	  var extraEntropy = $('#userEntropy').val();
 	  $('#userEntropy').val('');
 	  var randomSeed = lightwallet.keystore.generateRandomSeed(extraEntropy);
-	  console.log(randomSeed);
+	  //console.log(randomSeed);
 	  var infoString = 'Your new wallet seed is: "' + randomSeed + '". Please write it down on paper or in a password manager, you will need it to access your wallet. Do not let anyone see this seed or they can take your Ether. ' + 'Please enter a password to encrypt your seed while in the browser.';
 	  var password = prompt(infoString, 'Password');
 	  lightwallet.keystore.deriveKeyFromPassword(password, function (err, pwDerivedKey) {
@@ -253,9 +253,9 @@
 	    ks.generateNewAddress(pwDerivedKey);
 	    var addr = ks.getAddresses()[0];
 	    var signedMsg = signing.signMsg(ks, pwDerivedKey, message, addr);
-	    console.log(signedMsg.v.toString());
-	    console.log(signedMsg.r.toString());
-	    console.log(signedMsg.s.toString());
+	    // console.log(signedMsg.v.toString());
+	    // console.log(signedMsg.r.toString());
+	    // console.log(signedMsg.s.toString());
 	    socket.emit('signedMessage', {
 	      v: signedMsg.v,
 	      r: signedMsg.r,
