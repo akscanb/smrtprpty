@@ -5,10 +5,10 @@ exports = module.exports = function (app) {
     next();
   });
 
-  //lightwallet
-  app.get('/lightwallet', function (req, res, next) {
-    res.render('index.html');
-  });
+  // //lightwallet
+  // app.get('/lightwallet', function (req, res, next) {
+  //   res.render('index.html');
+  // });
   //user ui
   app.get('/user', function (req, res, next) {
     res.render('user.html');
