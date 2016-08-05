@@ -21,12 +21,16 @@ exports = module.exports = function (server) {
   // instantiate by address
   var myContractInstance = MyContract.at(contractAddress);
   var event = myContractInstance.LockedBy();
-  event.watch(function(error,result){
-    if(!error)
+  event.watch(function(error,result) {
+    if(!error){
       console.log(result);
       currentHolder = ""
-      //currentHolder += result.args.currentHolder;
-      console.log(result.args.currentHolder);
+      currentHolder += result.args.currentHolder;
+      console.log(currentHolder);
+    }else
+    {
+      console.log('Event error: '+error);
+    }
   })
 
 
@@ -43,6 +47,7 @@ exports = module.exports = function (server) {
       // To do: Check message
       var msgSender = '0x'+ recoveredAddress.toString('hex');
       console.log(msgSender);
+      console.log(currentHolder);
       console.log(currentHolder==msgSender);
       if(currentHolder==msgSender){
         currentContent = data.msg;
