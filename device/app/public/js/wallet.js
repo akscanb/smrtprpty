@@ -94,7 +94,7 @@
 	  $('#loading').show();
 	};
 	window.msgConsole = function () {
-	  console.log("We are here!");
+	  //console.log("We are here!")
 	  $('#loading').hide();
 	  $('#msging').show();
 	};
@@ -106,7 +106,7 @@
 	  var myContractInstance = MyContract.at(contractAddress);
 	  var event = myContractInstance.LockedBy();
 	  event.watch(function (error, result) {
-	    console.log('error in event watch:' + error);
+	    console.log(error);
 	    if (!error) {
 	      //console.log('hello');
 	      //console.log(result);
@@ -120,7 +120,7 @@
 	      }
 	    }
 	  });
-	  console.log('reached here!');
+	  //console.log('reached here!');
 	};
 
 	window.newAddresses = function (password) {
@@ -233,7 +233,7 @@
 	    console.log('error: ' + err);
 	    console.log('txhash: ' + txhash);
 	    if (!err) {
-	      console.log("No Error!");
+	      //console.log("No Error!");
 	      checkAddress(fromAddr);
 	    } else {
 	      alert(err);

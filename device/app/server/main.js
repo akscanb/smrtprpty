@@ -25,12 +25,17 @@ exports = module.exports = function (server) {
     if(!error){
       console.log(result);
       currentHolder = ""
+<<<<<<< HEAD
       currentHolder += result.args.currentHolder;
       console.log(currentHolder);
     }else
     {
       console.log('Event error: '+error);
     }
+=======
+      //currentHolder += result.args.currentHolder;
+      console.log(result.args.currentHolder);
+>>>>>>> master
   })
 
 
