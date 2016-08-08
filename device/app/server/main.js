@@ -27,9 +27,11 @@ exports = module.exports = function (server) {
       currentHolder = ""
       currentHolder += result.args.currentHolder;
       console.log(currentHolder);
+      console.log(result.args.lockedTill);
+
     }else
     {
-      console.log('Event error: '+error);
+      console.log(error);
     }
   })
 
