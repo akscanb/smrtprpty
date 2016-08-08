@@ -47,6 +47,7 @@ exports = module.exports = function (server) {
       // To do: Check message
       var msgSender = '0x'+ recoveredAddress.toString('hex');
       console.log(msgSender);
+      console.log(currentHolder);
       console.log(currentHolder==msgSender);
       if(currentHolder==msgSender){
         currentContent = data.msg;
