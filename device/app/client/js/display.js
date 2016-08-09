@@ -7,28 +7,31 @@ function setContent(content) {
   var iframe = $("#displayout")
   iframe.attr('src',content);
 }
-function videoType(url) {
-    if (strpos(url, 'youtube') > 0) {
-        return getId(url);
-    } elseif (strpos(url, 'vimeo') > 0) {
-        return 'vimeo';
-    } else {
-        return 'unknown';
-    }
-}
-function getId(url) {
-    var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    var match = url.match(regExp);
 
-    if (match && match[2].length == 11) {
-        return match[2];
-    } else {
-        return 'error';
-    }
+
+/**parses video url**/
+function parseVideo(url) {
+  var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  var match = url.match(regExp);
+  var vimeoRegex = /(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
+  var parsed = url.match(vimeoRegex);
+  if (match && match[2].length == 11) {
+    //parsed youtube link
+    return "https://www.youtube.com/embed/"+match[2]+"?autoplay=1";
+  } else if(parsed){
+    //parsed vimeo link
+    return "//player.vimeo.com/video/" + parsed[1]+"?autoplay=1";
+  }
+  else{
+    return url;
+  }
 }
-var urllink = 'https://www.youtube.com/embed/mb6Jc4juSF8'
+
+var urllink = 'http://www.media.mit.edu'
+
 $("#displayout").ready(function(){
-  setContent(urllink);
+  setContent(parseVideo(urllink));
+  console.log('done');
 })
 
 
