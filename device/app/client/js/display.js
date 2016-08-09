@@ -39,6 +39,6 @@ socket.on('newContent', function(data) {
   if (data != data.msg){
     data = data.msg;
     console.log('New content received" '+data.msg);
-    setContent(data.msg);
+    setContent(parseVideo(data.msg));
   }
 })
