@@ -23,23 +23,18 @@ exports = module.exports = function (server) {
   var event = myContractInstance.LockedBy();
   event.watch(function(error,result) {
     if(!error) {
-      
+
       if (result.hasOwnProperty('args') && result.args.hasOwnProperty('currentHolder')) {
         currentHolder = result.args.currentHolder+'';
         console.log('New holder: '+result.args.currentHolder);
       }
     } else {
       console.log('Event error: '+error);
-    }  
+    }
   })
 
 
   ws.on('connection',function(socket){
-
-    ws.emit('newContent',{
-          msg : currentContent
-    })
-
     socket.on('signedMessage',function(data){
       var recoveredAddress = lightwallet.signing.recoverAddress(data.msg, data.v,data.r,data.s);
       console.log('Received message '+data.msg+' signed by '+recoveredAddress.toString('hex'));
@@ -49,6 +44,7 @@ exports = module.exports = function (server) {
       console.log(msgSender);
       console.log(currentHolder);
       console.log(currentHolder==msgSender);
+      console.log(data.msg);
       if(currentHolder==msgSender){
         currentContent = data.msg;
         ws.emit('newContent',{

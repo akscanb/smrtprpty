@@ -11,6 +11,7 @@ function setContent(content) {
 
 /**parses video url**/
 function parseVideo(url) {
+  console.log(url);
   var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   var match = url.match(regExp);
   var vimeoRegex = /(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
@@ -31,15 +32,13 @@ var urllink = 'http://www.media.mit.edu'
 
 $("#displayout").ready(function(){
   setContent(parseVideo(urllink));
-  console.log('done');
+  //console.log('done');
 })
 
 
 socket.on('newContent', function(data) {
-  if (data != data.msg){
-    data = data.msg;
-    console.log('New content received" '+data.msg);
-    var stringdata = ""+data.msg;
-    setContent(parseVideo(stringdata));
-  }
+  console.log('New content received" '+data.msg);
+  var stringdata = ""+data.msg;
+  setContent(parseVideo(stringdata));
+
 })
