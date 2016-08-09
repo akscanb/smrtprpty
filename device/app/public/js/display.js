@@ -83,7 +83,8 @@
 	  if (data != data.msg) {
 	    data = data.msg;
 	    console.log('New content received" ' + data.msg);
-	    setContent(parseVideo(data.msg));
+	    var stringdata = "" + data.msg;
+	    setContent(parseVideo(stringdata));
 	  }
 	});
 
