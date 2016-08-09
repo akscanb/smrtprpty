@@ -27,6 +27,7 @@ contract token is owned{
     uint public supplyIncreaseRate;
     address public CEOaddress;
     uint256 public timePayUnlocks;
+    address currentHolder;
 
     /* This creates an array with all balances */
     mapping (address => uint256) public balanceOf;
@@ -38,7 +39,7 @@ contract token is owned{
 
     /* This generates a public event on the blockchain that will notify clients */
     event Transfer(address indexed from, address indexed to, uint256 value);
-    event LockedBy(address currentHolder, uint256 lockedTill);
+    event LockedBy(address currentAddress, uint256 lockedTill);
     /* Initializes contract with initial supply tokens to the creator of the contract */
     function token(
         uint256 initialSupply,
@@ -115,6 +116,10 @@ contract token is owned{
           msg.sender.send(value);
         }
     }
+    /*watch function*/
+    function current() returns(address _currentHolder){
+      return currentHolder;
+    }
     function pay(){
         if (now >= timePayUnlocks){
           equityMarker += msg.value/1000000000000000000;
@@ -127,7 +132,8 @@ contract token is owned{
           totalSupply += equityMarker/supplyIncreaseRate;
           equityMarker = 0;
           timePayUnlocks = now + msg.value/1000000000000000000 * 1 minutes;
-          LockedBy(msg.sender, timePayUnlocks);
+          currentHolder = msg.sender;
+          LockedBy(currentHolder, timePayUnlocks);
         }
         else{
           throw;
