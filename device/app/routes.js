@@ -10,7 +10,7 @@ exports = module.exports = function (app) {
   //   res.render('index.html');
   // });
   //user ui
-  app.get('/user', function (req, res, next) {
+  app.get('/', function (req, res, next) {
     res.render('user.html');
   });
   //display
