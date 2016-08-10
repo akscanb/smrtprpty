@@ -37,7 +37,7 @@ exports = module.exports = function (server) {
   ws.on('connection',function(socket){
     if(msgBool){
       ws.emit('newContent',{
-        msg:currentContent;
+        msg : currentContent
       })
     }
     socket.on('signedMessage',function(data){
