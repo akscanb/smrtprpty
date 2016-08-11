@@ -2,7 +2,6 @@
 exports = module.exports = function (server) {
   var io = require('socket.io');
   var lightwallet = require('eth-lightwallet');
-  var msgBool = false;
   var ws = io(server);
   var Web3 = require('web3');
   var currentHolder = "";
@@ -35,11 +34,11 @@ exports = module.exports = function (server) {
 
 
   ws.on('connection',function(socket){
-    if(msgBool){
-      ws.emit('newContent',{
-        msg : currentContent
-      })
-    }
+
+    ws.emit('onConnect',{
+      msg : currentContent
+    })
+
     socket.on('signedMessage',function(data){
       var recoveredAddress = lightwallet.signing.recoverAddress(data.msg, data.v,data.r,data.s);
       console.log('Received message '+data.msg+' signed by '+recoveredAddress.toString('hex'));
@@ -50,7 +49,6 @@ exports = module.exports = function (server) {
       console.log(currentHolder);
       console.log(currentHolder==msgSender);
       console.log(data.msg);
-      msgBool = true;
       if(currentHolder==msgSender){
         currentContent = data.msg;
         ws.emit('newContent',{

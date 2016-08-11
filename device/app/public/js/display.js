@@ -49,6 +49,7 @@
 	var io = __webpack_require__(137);
 	var socket = io.connect();
 	var data;
+	var onConnect = false;
 
 	function setContent(content) {
 	  var iframe = $("#displayout");
@@ -81,10 +82,17 @@
 	});
 
 	socket.on('newContent', function (data) {
-	  console.log('New content received" ' + data.msg);
-	  var stringdata = "" + data.msg;
-	  setContent(parseVideo(stringdata));
+	  console.log('New content received ' + data.msg);
+	  setContent(parseVideo(data.msg));
 	});
+
+	if (!onConnect) {
+	  socket.on('onConnect', function (data) {
+	    console.log('First connection!');
+	    onConnect = true;
+	    setContent(data.msg);
+	  });
+	}
 
 /***/ },
 /* 1 */,
