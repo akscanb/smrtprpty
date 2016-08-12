@@ -24,7 +24,7 @@ contract SmartProperty {
 
     /* This generates a public event on the blockchain that will notify clients */
     event Transfer(address indexed from, address indexed to, uint256 value);
-    event Payment(address payer, uint256 duration);
+    event Payment(address payer, uint256 paidUntil);
     /* Initializes contract with initial supply tokens to the creator of the contract */
     function smartProperty(
         uint256 initialSupply,
@@ -44,7 +44,7 @@ contract SmartProperty {
         supplyIncreaseRate = equityGoal;                    // Equity goal to distribute a token to CEO
         msg.sender.send(msg.value);                         // Sends back any money sent on creation
         currentIndex = 0;
-        price = _price                                      // Price for service in Wei
+        price = _price                                      // Price for service in Wei/min
         indexes[currentIndex] = msg.sender;
         if(ceoAddress != msg.sender){
           currentIndex = 1;
@@ -95,12 +95,12 @@ contract SmartProperty {
         return true;
     }
 
-    /*withdraw funds*/
+    // withdraw funds
    function withDraw(){
         if(etherBalanceOf[msg.sender]>0){
-          uint value = etherBalanceOf[msg.sender];
-          etherBalanceOf[msg.sender] = 0;
-          msg.sender.send(value);
+            uint value = etherBalanceOf[msg.sender];
+            etherBalanceOf[msg.sender] = 0;
+            msg.sender.send(value);
         }
     }
 
@@ -118,23 +118,23 @@ contract SmartProperty {
         }
     }
 
-    function unlockService(u)
 
     function pay(){
+        // Payment is only accepted if the property is not currently rented
         if (now >= paidUntil){
  
-          // Credit shareholder accounts with dividend payment
-          creditDividends(msg.value);
+            // Credit shareholder accounts with dividend payment
+            creditDividends(msg.value);
           
-          // Increase shares of CEO and total share -> Dilution of external shareholders
-          dilute(msg.value * supplyIncreaseRate);
+            // Increase shares of CEO and total share -> Dilution of external shareholders
+            dilute(msg.value * supplyIncreaseRate);
         
-          paidUntil = now + msg.value/price * 1 minutes;
-
-          Payment(msg.sender, paidUntil);
+          
+            paidUntil = now + msg.value/price * 1 minutes;
+            Payment(msg.sender, paidUntil);
         }
         else{
-          throw;
+            throw;
         }
     }
     /* This unnamed function is called whenever someone tries to send ether to it */
