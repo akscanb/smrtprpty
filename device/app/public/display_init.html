@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <link rel="stylesheet" href="/style/main.css" />
+  <!--[if lte IE 9]><link rel="stylesheet" href="/style/ie9.css" /><![endif]-->
+  <!--[if lte IE 8]><link rel="stylesheet" href="style/ie8.css" /><![endif]-->
+  <noscript><link rel="stylesheet" href="/style/noscript.css" /></noscript>
+</head>
+<body class='is-loading'>
+ <section class="main" id="start">
+<div id="wrapper">
+<div> 
+  <h1>You can rent this display instantly!</h1>
+  <h2>Go to http://smartproperty.media.edu</h2>
+</div>
+<div>
+  <img src="/images/qr.png">
+</div>
+</section>
+</div>
+
+<!-- Scripts -->
+			<!--[if lte IE 8]><script src="assets/js/respond.min.js"></script><![endif]-->
+			<script>
+				if ('addEventListener' in window) {
+					window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-loading\b/, ''); });
+					document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+				}
+			</script>
+
+</body>
+</html>
+

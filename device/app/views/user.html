@@ -80,13 +80,14 @@
 						</div>
 
 						<hr/>
-						<h2>Rent display<h2>
-						<div class="field">
-							<input type="text" id="amount" value="" placeholder="Amount [Ether]" size="80"></input>
+						<p>For how long do you want to rent the display?</p>
+						<div id="period" class="field">
+							<input type="number" id="periodInput" value="5" placeholder="" size="80"></input> minutes
+							<div id="price"/>
 						</div>
 						<br>
 						<ul class="actions">
-								<li><button onclick="pay()" class="button">Rent Display</button></li>
+								<li><button id="payButton" onclick="pay()" class="button">Rent Display</button></li>
 						</ul>
 						<ul class="actions">
 								<li><button onclick="toStart()" class="button">Cancel</button></li>

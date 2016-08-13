@@ -77,7 +77,8 @@
 	var urllink = 'http://www.media.mit.edu';
 
 	$("#displayout").ready(function () {
-	  setContent(parseVideo(urllink));
+	  //setContent(urllink);
+	  setContent('display_init.html');
 	  //console.log('done');
 	});
 

@@ -1,7 +1,7 @@
 
 contract tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData); }
 
-contract SmartProperty {
+contract smartProperty {
     /* Public variables of the token */
     string public standard = 'Token 0.1';
     string public name;
@@ -32,7 +32,8 @@ contract SmartProperty {
         uint8 decimalUnits,
         string tokenSymbol,
         address ceoAddress,
-        uint256 supplyIncRate,
+        uint256 supplyIncRateNum,
+        uint256 supplyIncRateDen,
         uint256 _price
         ) {
         balanceOf[msg.sender] = initialSupply;              // Give the creator all initial tokens
@@ -41,10 +42,10 @@ contract SmartProperty {
         symbol = tokenSymbol;                               // Set the symbol for display purposes
         decimals = decimalUnits;                            // Amount of decimals for display purposes
         CEOaddress = ceoAddress;                            // Set the address of the Ceo.
-        supplyIncreaseRate = equityGoal;                    // Equity goal to distribute a token to CEO
+        supplyIncreaseRate = supplyIncRateNum/supplyIncRateDen;                    // Equity goal to distribute a token to CEO
         msg.sender.send(msg.value);                         // Sends back any money sent on creation
         currentIndex = 0;
-        price = _price                                      // Price for service in Wei/min
+        price = _price;                                      // Price for service in Wei/min
         indexes[currentIndex] = msg.sender;
         if(ceoAddress != msg.sender){
           currentIndex = 1;
@@ -101,6 +102,7 @@ contract SmartProperty {
             uint value = etherBalanceOf[msg.sender];
             etherBalanceOf[msg.sender] = 0;
             msg.sender.send(value);
+
         }
     }
 
@@ -122,14 +124,14 @@ contract SmartProperty {
     function pay(){
         // Payment is only accepted if the property is not currently rented
         if (now >= paidUntil){
- 
+
             // Credit shareholder accounts with dividend payment
             creditDividends(msg.value);
-          
+
             // Increase shares of CEO and total share -> Dilution of external shareholders
-            dilute(msg.value * supplyIncreaseRate);
-        
-          
+            dilute(msg.value/1000000000000000000 * supplyIncreaseRate);
+
+            currentHolder = msg.sender;
             paidUntil = now + msg.value/price * 1 minutes;
             Payment(msg.sender, paidUntil);
         }

@@ -9,7 +9,6 @@ function setContent(content) {
   iframe.attr('src',content);
 }
 
-
 /**parses video url**/
 function parseVideo(url) {
   console.log(url);
@@ -32,7 +31,8 @@ function parseVideo(url) {
 var urllink = 'http://www.media.mit.edu'
 
 $("#displayout").ready(function(){
-  setContent(parseVideo(urllink));
+  //setContent(urllink);
+  setContent('display_init.html');
   //console.log('done');
 })
 
