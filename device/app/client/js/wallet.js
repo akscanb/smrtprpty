@@ -28,7 +28,9 @@ window.checkIfEnoughMoney = () => {
 
   if (window.price >= window.balance || isNaN(window.balance)) {
     return false;
-  } else return true;
+  } else {
+    return true;
+  }  
 }
 
 $(document).ready(function(){

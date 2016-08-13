@@ -1,6 +1,6 @@
 @charset "UTF-8";
 @import url(font-awesome.min.css);
-@import url("http://fonts.googleapis.com/css?family=Source+Sans+Pro:300");
+@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic");
 
 /*
 	Identity by HTML5 UP
@@ -127,12 +127,11 @@
 
 	body, input, select, textarea {
 		color: #414f57;
-		font-family: "Source Sans Pro", Helvetica, sans-serif;
+		font-family: "Lato";
 		font-size: 14pt;
 		font-weight: 300;
 		line-height: 2;
 		letter-spacing: 0.2em;
-		text-transform: uppercase;
 	}
 
 		@media screen and (max-width: 1680px) {
@@ -266,6 +265,10 @@
 		display: block;
 		font-size: 0.9em;
 		margin: 0 0 0.75em 0;
+	}
+
+	#periodInput {
+		text-align:right;
 	}
 
 	input[type="text"],
@@ -630,7 +633,7 @@
 		color: #414f57 !important;
 		cursor: pointer;
 		text-align: center;
-		text-transform: uppercase;
+		text-transform: none;
 		white-space: nowrap;
 		font-weight: 300;
 		line-height: 1.5;
@@ -875,6 +878,10 @@
 	}
 	#loading{
 		display:none;
+	}
+
+	.alert{
+		color: red;
 	}
 
 	@media all and (max-width: 500px) {
