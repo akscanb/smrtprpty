@@ -107,7 +107,8 @@ window.getBalances = () => {
       for (var i=0; i<addresses.length; ++i) {
         //console.log(addresses[i]+' '+balances[i]/1.0e18+' ETH, Nonce: '+nonces[i]);
         currentAddress = addresses[0];
-        $('#addr').append('<div id=\'addr\'>' + addresses[i]+ '</div>' + '<div id=\'addr\'>'+ ' (Bal: ' + (balances[i] / 1.0e18) + ' ETH, Nonce: ' + nonces[i] + ')'+'</div>' )
+        //$('#addr').append('<div id=\'addr\'>' + addresses[i]+ '</div>' + '<div id=\'addr\'>'+ ' (Bal: ' + (balances[i] / 1.0e18) + ' ETH, Nonce: ' + nonces[i] + ')'+'</div>' );
+        $('#addr').append('<div id=\'addr\'> Your available balance is '+ (balances[i] / 1.0e18) + ' ETH </div>' );
       }
     })
   })
