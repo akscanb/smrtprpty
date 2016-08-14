@@ -226,12 +226,8 @@ window.sendEth = () => {
 
 window.pay = () => {
   var fromAddr = currentAddress;
-  var contractAddr = '0x9eb06FbCD5f1379142d5A3e51413Ba9b01d211C0';
-  var abi = abiArray;
-  var contract = web3.eth.contract(abi).at(contractAddr)
-  var functionName = 'pay'
   var args = [];
-  var valueEth = window.price;
+  var valueEth = price;
   if (valueEth<=0){
     alert("Please enter a valid amount of ether!");
     return;
@@ -246,34 +242,40 @@ window.pay = () => {
     console.log('txhash: ' + txhash)
     if(!err){
       console.log("No Error!");
-      checkAddress(fromAddr);
+      //checkAddress(fromAddr);
     }else{
       alert(err);
       goToPayView();
     }
   }
   args.push(callback)
-  contract[functionName].apply(this, args);
+  myContractInstance['pay'].apply(this, args);
 
 }
 
 window.signMessage = () => {
   var password = prompt('Enter Password', 'Password');
-  var message = $('#url').val();
-  lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
-    var seed = global_keystore.getSeed(pwDerivedKey);
-    var ks = new lightwallet.keystore(seed, pwDerivedKey);
-    ks.generateNewAddress(pwDerivedKey);
-    var addr = ks.getAddresses()[0];
-    var signedMsg = signing.signMsg(ks, pwDerivedKey, message, addr);
-    // console.log(signedMsg.v.toString());
-    // console.log(signedMsg.r.toString());
-    // console.log(signedMsg.s.toString());
-    socket.emit('signedMessage',{
-      v:signedMsg.v,
-      r:signedMsg.r,
-      s:signedMsg.s,
-      msg: message
+  if (name === null || name === false) { // Canceled
+    msgConsole();
+    console('Sending canceled');
+  } else {
+
+    var message = $('#url').val();
+    lightwallet.keystore.deriveKeyFromPassword(password, function(err, pwDerivedKey) {
+      var seed = global_keystore.getSeed(pwDerivedKey);
+      var ks = new lightwallet.keystore(seed, pwDerivedKey);
+      ks.generateNewAddress(pwDerivedKey);
+      var addr = ks.getAddresses()[0];
+      var signedMsg = signing.signMsg(ks, pwDerivedKey, message, addr);
+      // console.log(signedMsg.v.toString());
+      // console.log(signedMsg.r.toString());
+      // console.log(signedMsg.s.toString());
+      socket.emit('signedMessage',{
+        v:signedMsg.v,
+        r:signedMsg.r,
+        s:signedMsg.s,
+        msg: message
+      });
     });
-  });
+  }  
 }
