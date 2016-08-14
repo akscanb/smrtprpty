@@ -17,6 +17,7 @@ exports = module.exports = function (server) {
 
 
   var MyContract = web3.eth.contract(abiArray);
+
   // instantiate by address
   //var number=0;
   //console.log(web3.eth.blockNumber);
@@ -30,6 +31,9 @@ exports = module.exports = function (server) {
   // }
 
   var myContractInstance = MyContract.at(contractAddress);
+
+  var pricePerMin = myContractInstance.price();
+
   var event = myContractInstance.Payment();
   console.log('hi');
   event.watch(function(error,result) {
@@ -51,6 +55,10 @@ exports = module.exports = function (server) {
         msg : currentContent
       })
     }
+
+    ws.emit('price', {
+      msg : pricePerMin
+    })
 
     socket.on('signedMessage',function(data){
       var recoveredAddress = lightwallet.signing.recoverAddress(data.msg, data.v,data.r,data.s);

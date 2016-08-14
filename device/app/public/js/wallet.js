@@ -64,6 +64,8 @@
 	var currentAddress = "";
 	var currentHolder;
 
+	var price;
+
 	function setWeb3Provider(keystore) {
 	  var web3Provider = new HookedWeb3Provider({
 	    host: "http://dci-node-1.media.mit.edu:8545",
@@ -74,28 +76,44 @@
 
 	window.checkIfEnoughMoney = function () {
 
-	  if (window.price >= window.balance || isNaN(window.balance)) {
+	  if (price >= window.balance || isNaN(window.balance)) {
 	    return false;
-	  } else return true;
+	  } else {
+	    return true;
+	  }
 	};
+
+	var contractAddress = '0x9eb06FbCD5f1379142d5A3e51413Ba9b01d211C0';
+	var MyContract = web3.eth.contract(abiArray);
+	var myContractInstance = MyContract.at(contractAddress);
+
+	var pricePerMin;
+
+	socket.on('price', function (data) {
+	  pricePerMin = data.msg / 1.0e18;
+	  $('#priceInformation').text('The current price is ' + pricePerMin + ' ETH per min.');
+	  //console.log('pricePerMin: '+pricePerMin);
+	});
 
 	$(document).ready(function () {
 
-	  if (checkIfEnoughMoney()) {
-	    $('#price').removeClass('alert');
-	    $('#price').text('This will cost ' + $('#periodInput').val() + ' ETH');
-	  } else {
-	    $('#price').text('Your balance is too low!');
-	    $('#price').addClass('alert');
-	    $('#payButton').prop("disabled", true);
-	  }
-	  window.price = $('#periodInput').val();
+	  //get price from contract
+
+	  // if (checkIfEnoughMoney()) {
+	  //   $('#price').removeClass('alert');
+	  //   $('#price').text('This will cost '+ $('#periodInput').val() + ' ETH');
+	  // } else {
+	  //   $('#price').text('Your balance is too low!');
+	  //   $('#price').addClass('alert');
+	  //   $('#payButton').prop("disabled",true);
+	  // }
+	  price = $('#periodInput').val() * pricePerMin;
 	  $('#periodInput').on('input', function () {
-	    window.price = $(this).val();
+	    price = $(this).val() * pricePerMin;
 
 	    if (checkIfEnoughMoney()) {
 	      $('#price').removeClass('alert');
-	      $('#price').text('This will cost ' + $(this).val() + ' ETH');
+	      $('#price').text('This will cost ' + price + ' ETH');
 	      $('#payButton').prop("disabled", false);
 	    } else {
 	      $('#price').text('Your balance is too low!');
@@ -135,9 +153,7 @@
 	window.checkAddress = function (address) {
 	  var userAddress = address;
 	  //console.log('hello')'
-	  var contractAddress = '0x9eb06FbCD5f1379142d5A3e51413Ba9b01d211C0';
-	  var MyContract = web3.eth.contract(abiArray);
-	  var myContractInstance = MyContract.at(contractAddress);
+
 	  var event = myContractInstance.Payment();
 	  event.watch(function (error, result) {
 	    if (!error) {
