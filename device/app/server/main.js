@@ -63,6 +63,10 @@ exports = module.exports = function (server) {
       console.log(result.hasOwnProperty('args') && result.args.hasOwnProperty('payer'));
       if (result.hasOwnProperty('args') && result.args.hasOwnProperty('payer')) {
         currentHolder = result.args.payer+'';
+        time = result.args.paidUntil.c.pop();
+        timeCheck(time);
+        paidUntil = timeConverter(time);
+        console.log('New holder: '+result.args.payer+' held until' + paidUntil);
         console.log('New holder: '+result.args.payer);
       }
     } else {
@@ -97,6 +101,10 @@ exports = module.exports = function (server) {
         currentContent = data.msg;
         ws.emit('newContent',{
           msg : data.msg
+        })
+      }else{
+        ws.emit('newContent',{
+          msg : "defaultDisplay"
         })
       }
 

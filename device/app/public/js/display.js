@@ -95,9 +95,15 @@
 	});
 
 	socket.on('newContent', function (data) {
-	  console.log('New content received ' + data.msg);
-	  setContent(parseVideo(data.msg));
+	  if (data.msg == "showDefault") {
+	    showLanding();
+	  } else {
+	    console.log('New content received ' + data.msg);
+	    setContent(parseVideo(data.msg));
+	    showContent();
+	  }
 	});
+	socket.on;
 
 	if (!onConnect) {
 	  socket.on('onConnect', function (data) {
