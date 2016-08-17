@@ -7,6 +7,7 @@ var onConnect = false;
 function setContent(content) {
   var iframe = $("#displayout")
   iframe.attr('src',content);
+  showContent();
 }
 
 /**parses video url**/
@@ -30,9 +31,22 @@ function parseVideo(url) {
 
 var urllink = 'http://www.media.mit.edu'
 
-$("#displayout").ready(function(){
+
+function showContent() {
+  $('#landing').hide();
+  $('#displayout').show();
+}
+
+function showLanding() {
+  $('#displayout').hide();
+  $('#landing').show();
+
+}
+$(document).ready(function(){
   //setContent(urllink);
-  setContent('display_init.html');
+  showLanding();
+
+  //setContent('display_init.html');
   //console.log('done');
 })
 
@@ -46,5 +60,7 @@ if(!onConnect){
     console.log('First connection!')
     onConnect = true;
     setContent(data.msg);
+
+
   })
 }

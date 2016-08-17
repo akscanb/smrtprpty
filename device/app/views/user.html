@@ -31,9 +31,10 @@
 							<p>Senior Psychonautics Engineer</p>
 						</header> -->
 
-						<h2>Hello<h2>
-						<p>You can rent this display for ___ and send content to it.</p>
-						<p> To do this you need to restore an Ethereum wallet using a seed or just create a new wallet and fund it with some ether.</p>
+						<h1>Hi!<h1>
+						<h2>You can rent this display and show all kinds of content on it.</h2>
+						<p id="priceInformation"></p>
+						<!-- <p> To do this you need to restore an Ethereum wallet using a seed or just create a new wallet and fund it with some ETH.</p> -->
 
 						<hr />
 						<ul class="actions">
@@ -82,7 +83,7 @@
 						<hr/>
 						<p>For how long do you want to rent the display?</p>
 						<div id="period" class="field">
-							<input type="number" id="periodInput" value="5" placeholder="" size="80"></input> minutes
+							<input type="number" id="periodInput" value="5" placeholder="" min="1" size="80"></input> minutes
 							<div id="price"/>
 						</div>
 						<br>
@@ -104,21 +105,27 @@
 							<li><button onclick="signMessage()" class="button">Send</button></li>
 						</ul>
 					</section>
-					<div id="loading" class="loading">
+					<section id="loading">
+					<div  class="loading">
 						<div class="block"></div>
 						<div class="block"></div>
 						<div class="block"></div>
 						<div class="block"></div>
 					</div>
+					<div class="center">
+						<p>It my take up to minute until your payment is confirmed.</p>
+						<p>Please be patient</p>
+					</div>
+					</section>
 
 
 
 				<!-- Footer -->
-					<footer id="footer">
+					<!-- <footer id="footer">
 						<ul class="copyright">
 							<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 						</ul>
-					</footer>
+					</footer> -->
 
 			</div>
 

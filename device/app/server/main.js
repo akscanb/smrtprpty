@@ -46,12 +46,16 @@ exports = module.exports = function (server) {
 
 
   var MyContract = web3.eth.contract(abiArray);
+
   var myContractInstance = MyContract.at(contractAddress);
   var currentHolder = myContractInstance.currentHolder();
   var time = myContractInstance.paidUntil();
   var paidUntil = timeConverter(time);
   timeCheck(time);
   console.log(currentHolder+" locked the contract till: "+paidUntil);
+
+  var pricePerMin = myContractInstance.price();
+
 
   var event = myContractInstance.Payment();
   event.watch(function(error,result) {
@@ -73,7 +77,12 @@ exports = module.exports = function (server) {
         msg : currentContent
       })
     }
-    
+
+
+    ws.emit('price', {
+      msg : pricePerMin
+    })
+
     socket.on('signedMessage',function(data){
       var recoveredAddress = lightwallet.signing.recoverAddress(data.msg, data.v,data.r,data.s);
       console.log('Received message '+data.msg+' signed by '+recoveredAddress.toString('hex'));
