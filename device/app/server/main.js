@@ -19,9 +19,9 @@ exports = module.exports = function (server) {
   var currentContent;
   var lockedDisplay = false;
 
-  timedOut(){
+  function timedOut(){
     lockedDisplay = false;
-    ws.emit('newContent'{
+    ws.emit('newContent',{
       msg : "showDefault"
     })
   }
