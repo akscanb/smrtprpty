@@ -1,4 +1,15 @@
-
+function timeConverter(UNIX_timestamp){
+  var timestamp = new Date(UNIX_timestamp * 1000);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = timestamp.getFullYear();
+  var month = months[timestamp.getMonth()];
+  var date = timestamp.getDate();
+  var hour = timestamp.getHours();
+  var min = timestamp.getMinutes();
+  var sec = timestamp.getSeconds();
+  var times = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+  return times;
+}
 exports = module.exports = function (server) {
   var io = require('socket.io');
   var lightwallet = require('eth-lightwallet');
@@ -6,6 +17,24 @@ exports = module.exports = function (server) {
   var Web3 = require('web3');
   var currentHolder = "";
   var currentContent;
+  var lockedDisplay = false;
+
+  timedOut(){
+    lockedDisplay = false;
+    ws.emit('newContent'{
+      msg : "showDefault"
+    })
+  }
+
+  function timeCheck(time){
+    if(time-Math.floor(Date.now()/1000)>0){
+      lockedDisplay = true;
+      setTimeout(timedOut(),time-Math.floor(Date.now()/1000))
+    }else{
+      timedOut();
+    }
+  }
+
   if (typeof web3 !== 'undefined') {
     web3 = new Web3(web3.currentProvider);
   } else {
@@ -17,21 +46,14 @@ exports = module.exports = function (server) {
 
 
   var MyContract = web3.eth.contract(abiArray);
-  // instantiate by address
-  //var number=0;
-  //console.log(web3.eth.blockNumber);
-  // while(true){
-  //
-  //   var state = web3.eth.getStorageAt(contractAddress,number,"latest");
-  //   console.log(state);
-  //   console.log(number)
-  //   number ++;
-  //
-  // }
-
   var myContractInstance = MyContract.at(contractAddress);
+  var currentHolder = myContractInstance.currentHolder();
+  var time = myContractInstance.paidUntil();
+  var paidUntil = timeConverter(time);
+  timeCheck(time);
+  console.log(currentHolder+" locked the contract till: "+paidUntil);
+
   var event = myContractInstance.Payment();
-  console.log('hi');
   event.watch(function(error,result) {
     if(!error) {
       console.log(result.hasOwnProperty('args') && result.args.hasOwnProperty('payer'));
@@ -46,12 +68,12 @@ exports = module.exports = function (server) {
 
 
   ws.on('connection',function(socket){
-    if(currentContent){
+    if(currentContent&&lockedDisplay){
       ws.emit('onConnect',{
         msg : currentContent
       })
     }
-
+    
     socket.on('signedMessage',function(data){
       var recoveredAddress = lightwallet.signing.recoverAddress(data.msg, data.v,data.r,data.s);
       console.log('Received message '+data.msg+' signed by '+recoveredAddress.toString('hex'));
@@ -62,7 +84,7 @@ exports = module.exports = function (server) {
       console.log(currentHolder);
       console.log(currentHolder==msgSender);
       console.log(data.msg);
-      if(currentHolder==msgSender){
+      if(currentHolder==msgSender&&lockedDisplay){
         currentContent = data.msg;
         ws.emit('newContent',{
           msg : data.msg
