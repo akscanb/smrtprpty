@@ -14,7 +14,7 @@ var abiArray = [ { "constant": true, "inputs": [], "name": "currentHolder", "out
 
 var stringAbi = JSON.stringify(abiArray);
 var currentAddress = "";
-var currentHolder;
+var currentHolder = "";
 
 var price;
 
@@ -32,14 +32,21 @@ window.checkIfEnoughMoney = () => {
     return false;
   } else {
     return true;
-  }  
+  }
 }
 
 var contractAddress = '0x9eb06FbCD5f1379142d5A3e51413Ba9b01d211C0';
 var MyContract = web3.eth.contract(abiArray);
 var myContractInstance = MyContract.at(contractAddress);
 
+
 var pricePerMin;
+
+
+function checkIfCurrentHolder(address) {
+  var current = "0x"+currentAddress
+  return address == current;
+}
 
 socket.on('price', function(data) {
   pricePerMin = data.msg/1.0e18;
@@ -48,18 +55,9 @@ socket.on('price', function(data) {
 })
 
 
+
 $(document).ready(function(){
 
-  //get price from contract
-  
-  // if (checkIfEnoughMoney()) {
-  //   $('#price').removeClass('alert');
-  //   $('#price').text('This will cost '+ $('#periodInput').val() + ' ETH');
-  // } else {
-  //   $('#price').text('Your balance is too low!');
-  //   $('#price').addClass('alert');
-  //   $('#payButton').prop("disabled",true);
-  // }
   price = $('#periodInput').val() * pricePerMin;
   $('#periodInput').on('input', function() {
     price = $(this).val() * pricePerMin;
@@ -72,11 +70,11 @@ $(document).ready(function(){
       $('#price').text('Your balance is too low!');
       $('#price').addClass('alert');
       $('#payButton').prop("disabled",true);
-    }     
+    }
   });
-});  
+});
 
-
+var event = myContractInstance.Payment();
 
 window.goToPayView = () => {
   $('#start').hide();
@@ -99,6 +97,7 @@ window.restoreWallet = () => {
 window.msgLoading = () => {
   $('#pay').hide();
   $('#loading').show();
+
 }
 window.msgConsole = () => {
   //console.log("We are here!")
@@ -107,28 +106,17 @@ window.msgConsole = () => {
 }
 window.checkAddress = (address) => {
   var userAddress = address;
-  //console.log('hello')'
+  userAddress = '0x' + userAddress
+  if(currentHolder = ""){
 
-  var event = myContractInstance.Payment();
-  event.watch(function(error,result){
-    if(!error){
-      //console.log('hello');
-      console.log(result);
-      if(result.hasOwnProperty('args')&&result.args.hasOwnProperty('payer')){
-        currentHolder = result.args.payer;
-        userAddress = '0x' + userAddress
-        if (userAddress==currentHolder){
-          msgConsole();
-        }
-      }
-
-
-    }else{
-      console.log(error)
-    }
-  });
+  }
+  console.log(currentHolder)
+  if (userAddress==currentHolder){
+    msgConsole();
+  }
   //console.log('reached here!');
 }
+
 
 window.newAddresses = (password) => {
 
@@ -228,6 +216,21 @@ window.pay = () => {
   var fromAddr = currentAddress;
   var args = [];
   var valueEth = price;
+
+  event.watch(function(error,result){
+    if(!error){
+      console.log(result);
+      console.log(result.hasOwnProperty('args')&&result.args.hasOwnProperty('payer'))
+      if(result.hasOwnProperty('args')&&result.args.hasOwnProperty('payer')){
+        currentHolder = result.args.payer;
+        console.log(currentHolder);
+        console.log(currentAddress);
+        if(checkIfCurrentHolder(currentHolder)){
+          msgConsole();
+        }
+      }
+    }
+  })
   if (valueEth<=0){
     alert("Please enter a valid amount of ether!");
     return;
@@ -242,7 +245,7 @@ window.pay = () => {
     console.log('txhash: ' + txhash)
     if(!err){
       console.log("No Error!");
-      //checkAddress(fromAddr);
+      //ss(fromAddr);
     }else{
       alert(err);
       goToPayView();
@@ -250,6 +253,7 @@ window.pay = () => {
   }
   args.push(callback)
   myContractInstance['pay'].apply(this, args);
+
 
 }
 
@@ -277,5 +281,5 @@ window.signMessage = () => {
         msg: message
       });
     });
-  }  
+  }
 }

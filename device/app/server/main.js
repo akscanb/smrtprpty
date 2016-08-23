@@ -17,18 +17,21 @@ exports = module.exports = function (server) {
   var Web3 = require('web3');
   var currentHolder = "";
   var currentContent;
-  var lockedDisplay = false;
+  var lockedDisplay = true;
 
   function timedOut(){
-    lockedDisplay = false;
+    lockedDisplay = true;
     ws.emit('newContent',{
-      msg : "showDefault"
+      msg : "defaultDisplay"
     })
+
   }
 
   function timeCheck(time){
+    console.log('inside timecheck');
+    console.log(time-Math.floor(Date.now()/1000));
     if(time-Math.floor(Date.now()/1000)>0){
-      lockedDisplay = true;
+      lockedDisplay = false;
       setTimeout(timedOut(),time-Math.floor(Date.now()/1000))
     }else{
       timedOut();
@@ -76,7 +79,7 @@ exports = module.exports = function (server) {
 
 
   ws.on('connection',function(socket){
-    if(currentContent&&lockedDisplay){
+    if(currentContent&&!lockedDisplay){
       ws.emit('onConnect',{
         msg : currentContent
       })
@@ -97,7 +100,7 @@ exports = module.exports = function (server) {
       console.log(currentHolder);
       console.log(currentHolder==msgSender);
       console.log(data.msg);
-      if(currentHolder==msgSender&&lockedDisplay){
+      if(currentHolder==msgSender&&!lockedDisplay){
         currentContent = data.msg;
         ws.emit('newContent',{
           msg : data.msg

@@ -51,7 +51,8 @@ $(document).ready(function(){
 })
 
 socket.on('newContent', function(data) {
-  if (data.msg == "showDefault"){
+  console.log(data.msg);
+  if (data.msg == "defaultDisplay"){
     showLanding();
 
   }else{
