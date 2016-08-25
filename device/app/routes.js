@@ -9,12 +9,17 @@ exports = module.exports = function (app) {
   // app.get('/lightwallet', function (req, res, next) {
   //   res.render('index.html');
   // });
-  //user ui
-  app.get('/', function (req, res, next) {
-    res.render('user.html');
-  });
+
   //display
   app.get('/display', function(req, res, next){
     res.render('display.html');
+  });
+  //ownersdisplay
+  app.get('/owners', function(req,res,next){
+    res.render('owners.html')
+  });
+  //user ui
+  app.get('/', function (req, res, next) {
+    res.render('user.html');
   });
 };

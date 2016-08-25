@@ -17,10 +17,11 @@ exports = module.exports = function (server) {
   var Web3 = require('web3');
   var currentHolder = "";
   var currentContent;
-  var lockedDisplay = true;
+  var lockedDisplay;
 
   function timedOut(){
     lockedDisplay = true;
+    console.log("Display timed out!");
     ws.emit('newContent',{
       msg : "defaultDisplay"
     })
@@ -29,11 +30,16 @@ exports = module.exports = function (server) {
 
   function timeCheck(time){
     console.log('inside timecheck');
-    console.log(time-Math.floor(Date.now()/1000));
-    if(time-Math.floor(Date.now()/1000)>0){
+    var timeLeftInSeconds = time-Math.floor(Date.now()/1000);
+    console.log(timeLeftInSeconds);
+    if(timeLeftInSeconds>0){
+      console.log('inside timeCheck false');
       lockedDisplay = false;
-      setTimeout(timedOut(),time-Math.floor(Date.now()/1000))
+      var milliSeconds = timeLeftInSeconds * 1000;
+      console.log(milliSeconds)
+      setTimeout(timedOut, milliSeconds);
     }else{
+      console.log(time-Math.floor(Date.now()/1000))
       timedOut();
     }
   }
@@ -67,9 +73,11 @@ exports = module.exports = function (server) {
       if (result.hasOwnProperty('args') && result.args.hasOwnProperty('payer')) {
         currentHolder = result.args.payer+'';
         time = result.args.paidUntil.c.pop();
+        console.log('timeCheck')
         timeCheck(time);
+        console.log('after timeCheck')
         paidUntil = timeConverter(time);
-        console.log('New holder: '+result.args.payer+' held until' + paidUntil);
+        console.log('New holder: '+result.args.payer+' held until: ' + paidUntil);
         console.log('New holder: '+result.args.payer);
       }
     } else {
@@ -100,12 +108,16 @@ exports = module.exports = function (server) {
       console.log(currentHolder);
       console.log(currentHolder==msgSender);
       console.log(data.msg);
+      console.log('hello');
+      console.log(lockedDisplay);
       if(currentHolder==msgSender&&!lockedDisplay){
+        console.log('success');
         currentContent = data.msg;
         ws.emit('newContent',{
           msg : data.msg
         })
       }else{
+        console.log('fail');
         ws.emit('newContent',{
           msg : "defaultDisplay"
         })
